@@ -1,37 +1,12 @@
 {
   "info": {
-    "name": "CSCI3916 HW3 - Movie API",
-    "_postman_id": "csci3916-hw3-collection",
+    "_postman_id": "f79fa994-9f6b-46da-8378-55fee5155848",
+    "name": "CSCI3916 HW3 - Movie API Copy",
     "description": "Postman collection for CSCI3916 Assignment 3 - Movie API with JWT Authentication",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52012832",
+    "_collection_link": "https://go.postman.co/collection/52012832-f79fa994-9f6b-46da-8378-55fee5155848?source=collection_link"
   },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "https://csci3916-assignmentthree.onrender.com",
-      "type": "string"
-    },
-    {
-      "key": "jwt_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "random_username",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "random_password",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "movie_id",
-      "value": "",
-      "type": "string"
-    }
-  ],
   "item": [
     {
       "name": "Auth",
@@ -73,7 +48,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -81,10 +59,15 @@
             },
             "url": {
               "raw": "{{base_url}}/signup",
-              "host": ["{{base_url}}"],
-              "path": ["signup"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "signup"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Signin - Get JWT Token",
@@ -111,7 +94,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -119,10 +105,15 @@
             },
             "url": {
               "raw": "{{base_url}}/signin",
-              "host": ["{{base_url}}"],
-              "path": ["signin"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "signin"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Error - Duplicate User",
@@ -147,7 +138,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -155,10 +149,15 @@
             },
             "url": {
               "raw": "{{base_url}}/signup",
-              "host": ["{{base_url}}"],
-              "path": ["signup"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "signup"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -197,14 +196,22 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/movies",
-              "host": ["{{base_url}}"],
-              "path": ["movies"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "GET Specific Movie",
@@ -229,14 +236,23 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/movies/Inception",
-              "host": ["{{base_url}}"],
-              "path": ["movies", "Inception"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies",
+                "Inception"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "POST Save Movie",
@@ -262,8 +278,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -271,10 +293,15 @@
             },
             "url": {
               "raw": "{{base_url}}/movies",
-              "host": ["{{base_url}}"],
-              "path": ["movies"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "PUT Update Movie",
@@ -299,8 +326,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -308,10 +341,16 @@
             },
             "url": {
               "raw": "{{base_url}}/movies/Interstellar",
-              "host": ["{{base_url}}"],
-              "path": ["movies", "Interstellar"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies",
+                "Interstellar"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "DELETE Movie",
@@ -336,14 +375,23 @@
           "request": {
             "method": "DELETE",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/movies/Interstellar",
-              "host": ["{{base_url}}"],
-              "path": ["movies", "Interstellar"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies",
+                "Interstellar"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Error - PUT on /movies (not allowed)",
@@ -367,8 +415,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -376,10 +430,15 @@
             },
             "url": {
               "raw": "{{base_url}}/movies",
-              "host": ["{{base_url}}"],
-              "path": ["movies"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Error - Missing Actors",
@@ -404,8 +463,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -413,10 +478,15 @@
             },
             "url": {
               "raw": "{{base_url}}/movies",
-              "host": ["{{base_url}}"],
-              "path": ["movies"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Error - Movie Not Found",
@@ -441,18 +511,26 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/movies/MovieThatDoesNotExist",
-              "host": ["{{base_url}}"],
-              "path": ["movies", "MovieThatDoesNotExist"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies",
+                "MovieThatDoesNotExist"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
-    }
-    ,
+    },
     {
       "name": "Reviews",
       "item": [
@@ -480,15 +558,29 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/movies/Inception?reviews=true",
-              "host": ["{{base_url}}"],
-              "path": ["movies", "Inception"],
-              "query": [{ "key": "reviews", "value": "true" }]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies",
+                "Inception"
+              ],
+              "query": [
+                {
+                  "key": "reviews",
+                  "value": "true"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "POST Save Review",
@@ -533,8 +625,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -542,10 +640,15 @@
             },
             "url": {
               "raw": "{{base_url}}/reviews",
-              "host": ["{{base_url}}"],
-              "path": ["reviews"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reviews"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Error - Invalid Movie Request (not in DB)",
@@ -570,14 +673,23 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/movies/MovieThatDoesNotExist",
-              "host": ["{{base_url}}"],
-              "path": ["movies", "MovieThatDoesNotExist"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movies",
+                "MovieThatDoesNotExist"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Error - Invalid Save Review (movie not in DB)",
@@ -602,8 +714,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "{{jwt_token}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "{{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -611,12 +729,39 @@
             },
             "url": {
               "raw": "{{base_url}}/reviews",
-              "host": ["{{base_url}}"],
-              "path": ["reviews"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reviews"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://csci3916-assignmentthree.onrender.com"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    },
+    {
+      "key": "random_username",
+      "value": ""
+    },
+    {
+      "key": "random_password",
+      "value": ""
+    },
+    {
+      "key": "movie_id",
+      "value": ""
     }
   ]
 }
