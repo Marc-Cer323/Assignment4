@@ -1,67 +1,105 @@
-# Assignment Four
-## Purpose
-The purpose of this assignment is to leverage Google’s analytics policies to gather information about the requests being sent in by users.
+# CSCI3916 Assignment Three & Four - Movie API
 
-Using the information already entered to MongoDB for the previous assignment, you will add another collection of reviews that are tied to the movies. This way users can query the database and get the previous information (title, year released and actors) as well as the reviews. These two entities should remain separate! Do not append the reviews to the existing movie information.  
+## Deployment Links
+- **API (Render):** https://csci3916-assignmentthree.onrender.com
+- **React Site (Netlify):** https://csci3916-hw3-react.netlify.app
 
-Leverage the Async.js library or mongo $lookup aggregation capability to join the entities.
+## GitHub Repositories
+- **API:** https://github.com/Marc-Cer323/CSCI3916_AssignmentThree
+- **React:** https://github.com/Marc-Cer323/CSC3916_REACT19
 
+---
 
-## Requirements
-- Create a collection in MongoDB (Mongo Atlas) to hold reviews about existing movies.
-    - A review contains the name of the reviewer, a small quote about what they thought about the movie, and their rating out of five stars.
-        - movieId (from the movie collection)
-        - username
-        - review
-        - rating
-    - The review collection should have at least one review for each movie. – The review can be a simple, ficticious review that you create.
-- This API should build upon the previous API in assignment three.
-    - If the user sends a response with the query parameter reviews=true, then the response should include the movie information as well as all the reviews for the movie. If they do not pass this in, the response should not show the reviews. – The review information should be appended to the response to the user.
-        - Hint: Look at $lookup on how to aggregate two collections
-    - Implement GET/POST (DELETE is optional for reviews)
-        - POST needs to be secured with a JWT authorization token.  The Username in the token should be stored with the review (indicating the user that submitted the review)
-            - If review created send back JSON message { message: 'Review created!' } 
-- Extra Credit:  Add custom analytics to return information about which movies users are querying.
-    - Create a custom analytics policy that describes the number of times each movie has been reviewed. To do this, you will have to send a number of requests for each movie.
-        - Custom Dimension: Movie Name
-        - Custom Metric: Requested:  Value 1 (it will aggregate)
-    - Custom Dimension and Metric should be sent with an Event type 
-        - Event Category: Genre of Movie (e.g. Western)
-        - Event Action: Url Path (e.g. post /reviews)
-        - Event Label: API Request for Movie Review
-        - Event Value: 1 
+## API Routes
 
+| Route | GET | POST | PUT | DELETE |
+|---|---|---|---|---|
+| `/movies` | Return all movies | Save a single movie | 405 - Not Allowed | 405 - Not Allowed |
+| `/movies/:movieparameter` | Return specific movie (add `?reviews=true` to include reviews) | 405 - Not Allowed | Update specific movie by title | Delete specific movie by title |
+| `/reviews` | Return all reviews | Save a new review (JWT required) | - | - |
 
-## Submissions
-- Create a Postman test to test your API. You should include the following requests.
-    - All tests from HW3 and
-    - Valid request without the review query parameter (e.g reviews=true on the /movies route)
-    - Invalid request (for a movie not in the database) without the review query parameter. 
-    - Valid request with the review query parameter. (e.g reviews=true on the /movies/:id route)
-    - Valid save review method that associates a review with a movie (save a review for a movie in your DB)
-    - Invalid save review (movie missing from DB)
-    - Export a report from Google Analytics (only if you do the Extra Credit)
+### Authentication Routes
+| Route | Method | Description |
+|---|---|---|
+| `/signup` | POST | Register a new user |
+| `/signin` | POST | Login and receive JWT token |
 
-- Create a readme.md at the root of your github repository with the embedded (markdown) to your test collection
-    - Within the collection click the (…), share collection -> Embed
-    - Static Button
-    - Click update link
-    - Include your environment settings
-    - Copy to clipboard 
-- Submit the Url to canvas with the REPO CSC_3916
-- Note: All tests should be testing against your Heroku or Render endpoint
+---
 
-## Rubic
-- This one has an extra credit – code the custom analytics that correctly sends the movie name and they attach a PDF or Excel report from Google Analytics you receive +4
-- -2 if missing reviews collection
-- -2 if missing query parameters ?reviews=true that returns reviews (should include both movie and reviews)
-- -1 for each test that is missing (valid request for movie with query parameter, valid save review, invalid movie request, invalid save review) – for max of (-4 for missing all tests)
-- -2 if you have to manually copy the JWT token to get their tests to run (versus saving it from the sign-in call)
-- Try changing the review data to enter a different review before submitting to validate new review are returned – if not (-1)
+## Postman Collection
+
+The Postman collection and environment files are located in the `/postman` folder of this repository.
+
+To import and run:
+1. Open Postman
+2. Click **Import** → select the collection JSON file from `/postman`
+3. Also import the environment JSON file from `/postman`
+4. Set the environment to **No Environment** (collection variables are used)
+5. Run the **Auth** folder first (Signup → Signin) to auto-generate JWT token
+6. Run **Movies** and **Reviews** folders to test all routes
+
+### Tests Included
+**HW3 - Auth & Movies:**
+- ✅ Signup a new user (random username/password in pre-request script)
+- ✅ Signin and store JWT token as collection variable automatically
+- ✅ GET all movies
+- ✅ GET specific movie by title
+- ✅ POST save a new movie
+- ✅ PUT update a movie
+- ✅ DELETE a movie
+- ✅ Error: Duplicate user signup
+- ✅ Error: Movie missing required actors
+- ✅ Error: PUT on /movies (405 not allowed)
+- ✅ Error: Movie not found (404)
+
+**HW4 - Reviews:**
+- ✅ GET movie with reviews (?reviews=true)
+- ✅ POST save a review for a movie
+- ✅ Error: Invalid movie request (not in DB)
+- ✅ Error: Invalid save review (movie not in DB)
+
+---
+
+## Schemas
+
+### Movie Schema
+```javascript
+{
+  title: { type: String, required: true, index: true },
+  releaseDate: { type: Number, min: 1900, max: 2100 },
+  genre: { type: String, enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western', 'Science Fiction'] },
+  actors: [{ actorName: String, characterName: String }]
+}
+```
+
+### User Schema
+```javascript
+{
+  name: String,
+  username: { type: String, unique: true },
+  password: String  // hashed with bcrypt
+}
+```
+
+### Review Schema
+```javascript
+{
+  movieId: { type: ObjectId, ref: 'Movie', required: true },
+  username: { type: String, required: true },
+  review: { type: String, required: true },
+  rating: { type: Number, min: 0, max: 5, required: true }
+}
+```
+
+---
+
+## Environment Variables
+| Key | Description |
+|---|---|
+| `DB` | MongoDB Atlas connection string |
+| `SECRET_KEY` | JWT secret key |
+| `PORT` | Server port (default 8080) |
 
 ## Resources
-- https://github.com/daxko/universal-ga
-- https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets 
-- https://cloud.google.com/appengine/docs/flexible/nodejs/integrating-with-analytics
-- https://caolan.github.io/async/index.html
-- https://support.google.com/analytics/answer/2709829
+- https://www.mongodb.com/cloud/atlas
+- https://render.com/docs/deploy-create-react-app
