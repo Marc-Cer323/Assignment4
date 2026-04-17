@@ -1,21 +1,24 @@
-var passport = require('passport');
-var JwtStrategy = require('passport-jwt').Strategy;
-var ExtractJwt = require('passport-jwt').ExtractJwt;
-var User = require('./Users');
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const User = require('./Users');
 
-var opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
 opts.secretOrKey = process.env.SECRET_KEY;
 
-passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findById(jwt_payload.id, function (err, user) {
+passport.use(new JwtStrategy(opts, async function(jwt_payload, done) {
+    try {
+        const user = await User.findById(jwt_payload.id);
         if (user) {
-            done(null, user);
+            return done(null, user);
         } else {
-            done(null, false);
+            return done(null, false);
         }
-    });
+    } catch (err) {
+        return done(err, false);
+    }
 }));
 
-exports.isAuthenticated = passport.authenticate('jwt', { session : false });
-exports.secret = opts.secretOrKey ;
+exports.isAuthenticated = passport.authenticate('jwt', { session: false });
+exports.secret = opts.secretOrKey;
