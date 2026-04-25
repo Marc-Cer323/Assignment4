@@ -33,17 +33,17 @@ const router = express.Router();
 async function seedMovies() {
     const count = await Movie.countDocuments();
     if (count > 0) {
-        // Update existing movies with imageUrls if missing
-        await Movie.updateOne({ title: 'The Dark Knight', imageUrl: { $exists: false } },
-            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg' });
-        await Movie.updateOne({ title: 'Inception', imageUrl: { $exists: false } },
-            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg' });
-        await Movie.updateOne({ title: 'The Shawshank Redemption', imageUrl: { $exists: false } },
-            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NiYyLTg3YzItOTc2M2JlZjdiOTVhXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg' });
-        await Movie.updateOne({ title: 'The Silence of the Lambs', imageUrl: { $exists: false } },
-            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg' });
-        await Movie.updateOne({ title: 'The Lord of the Rings: The Fellowship of the Ring', imageUrl: { $exists: false } },
-            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg' });
+        // Always update imageUrls to ensure they are current
+        await Movie.updateOne({ title: 'The Dark Knight' },
+            { $set: { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg' } });
+        await Movie.updateOne({ title: 'Inception' },
+            { $set: { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg' } });
+        await Movie.updateOne({ title: 'The Shawshank Redemption' },
+            { $set: { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg' } });
+        await Movie.updateOne({ title: 'The Silence of the Lambs' },
+            { $set: { imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg' } });
+        await Movie.updateOne({ title: 'The Lord of the Rings: The Fellowship of the Ring' },
+            { $set: { imageUrl: 'https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg' } });
         return;
     }
 
