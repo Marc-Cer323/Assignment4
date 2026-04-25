@@ -29,16 +29,30 @@ app.use(passport.initialize());
 
 const router = express.Router();
 
-// Seed at least 5 movies on first run
+// Seed at least 5 movies with imageUrls
 async function seedMovies() {
     const count = await Movie.countDocuments();
-    if (count >= 5) return;
+    if (count > 0) {
+        // Update existing movies with imageUrls if missing
+        await Movie.updateOne({ title: 'The Dark Knight', imageUrl: { $exists: false } },
+            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg' });
+        await Movie.updateOne({ title: 'Inception', imageUrl: { $exists: false } },
+            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg' });
+        await Movie.updateOne({ title: 'The Shawshank Redemption', imageUrl: { $exists: false } },
+            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NiYyLTg3YzItOTc2M2JlZjdiOTVhXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg' });
+        await Movie.updateOne({ title: 'The Silence of the Lambs', imageUrl: { $exists: false } },
+            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg' });
+        await Movie.updateOne({ title: 'The Lord of the Rings: The Fellowship of the Ring', imageUrl: { $exists: false } },
+            { imageUrl: 'https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg' });
+        return;
+    }
 
     await Movie.insertMany([
         {
             title: 'The Dark Knight',
             releaseDate: 2008,
             genre: 'Action',
+            imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg',
             actors: [
                 { actorName: 'Christian Bale', characterName: 'Bruce Wayne' },
                 { actorName: 'Heath Ledger', characterName: 'The Joker' },
@@ -49,6 +63,7 @@ async function seedMovies() {
             title: 'Inception',
             releaseDate: 2010,
             genre: 'Science Fiction',
+            imageUrl: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
             actors: [
                 { actorName: 'Leonardo DiCaprio', characterName: 'Cobb' },
                 { actorName: 'Joseph Gordon-Levitt', characterName: 'Arthur' },
@@ -59,6 +74,7 @@ async function seedMovies() {
             title: 'The Shawshank Redemption',
             releaseDate: 1994,
             genre: 'Drama',
+            imageUrl: 'https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NiYyLTg3YzItOTc2M2JlZjdiOTVhXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg',
             actors: [
                 { actorName: 'Tim Robbins', characterName: 'Andy Dufresne' },
                 { actorName: 'Morgan Freeman', characterName: 'Ellis Boyd Redding' },
@@ -69,6 +85,7 @@ async function seedMovies() {
             title: 'The Silence of the Lambs',
             releaseDate: 1991,
             genre: 'Thriller',
+            imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg',
             actors: [
                 { actorName: 'Jodie Foster', characterName: 'Clarice Starling' },
                 { actorName: 'Anthony Hopkins', characterName: 'Hannibal Lecter' },
@@ -79,6 +96,7 @@ async function seedMovies() {
             title: 'The Lord of the Rings: The Fellowship of the Ring',
             releaseDate: 2001,
             genre: 'Fantasy',
+            imageUrl: 'https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg',
             actors: [
                 { actorName: 'Elijah Wood', characterName: 'Frodo Baggins' },
                 { actorName: 'Ian McKellen', characterName: 'Gandalf' },
@@ -86,7 +104,7 @@ async function seedMovies() {
             ]
         }
     ]);
-    console.log('Seeded 5 movies');
+    console.log('Seeded 5 movies with images');
 }
 
 // POST /signup
@@ -94,14 +112,12 @@ router.post('/signup', async (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({ success: false, msg: 'Please include both username and password to signup.' });
     }
-
     try {
         const user = new User({
             name: req.body.name,
             username: req.body.username,
             password: req.body.password,
         });
-
         await user.save();
         res.status(201).json({ success: true, msg: 'Successfully created new user.' });
     } catch (err) {
@@ -116,13 +132,10 @@ router.post('/signup', async (req, res) => {
 router.post('/signin', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username }).select('name username password');
-
         if (!user) {
             return res.status(401).json({ success: false, msg: 'Authentication failed. User not found.' });
         }
-
         const isMatch = await user.comparePassword(req.body.password);
-
         if (isMatch) {
             const userToken = { id: user._id, username: user.username };
             const token = jwt.sign(userToken, process.env.SECRET_KEY, { expiresIn: '1h' });
@@ -135,28 +148,44 @@ router.post('/signin', async (req, res) => {
     }
 });
 
-// /movies routes
+// GET /movies - returns all movies sorted by average rating
+// POST /movies - creates a new movie
 router.route('/movies')
     .get(authJwtController.isAuthenticated, async (req, res) => {
         try {
-            const movies = await Movie.find();
+            const movies = await Movie.aggregate([
+                {
+                    $lookup: {
+                        from: 'reviews',
+                        localField: '_id',
+                        foreignField: 'movieId',
+                        as: 'movieReviews'
+                    }
+                },
+                {
+                    $addFields: {
+                        avgRating: { $avg: '$movieReviews.rating' }
+                    }
+                },
+                {
+                    $sort: { avgRating: -1 }
+                }
+            ]);
             res.status(200).json(movies);
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
         }
     })
     .post(authJwtController.isAuthenticated, async (req, res) => {
-        const { title, releaseDate, genre, actors } = req.body;
-
+        const { title, releaseDate, genre, actors, imageUrl } = req.body;
         if (!title || !releaseDate || !genre || !actors || actors.length < 3) {
             return res.status(400).json({
                 success: false,
                 message: 'Movie must include title, releaseDate, genre, and at least 3 actors.'
             });
         }
-
         try {
-            const movie = new Movie({ title, releaseDate, genre, actors });
+            const movie = new Movie({ title, releaseDate, genre, actors, imageUrl });
             await movie.save();
             res.status(201).json({ success: true, movie });
         } catch (err) {
@@ -164,13 +193,13 @@ router.route('/movies')
         }
     })
     .put(authJwtController.isAuthenticated, (req, res) => {
-        res.status(405).json({ success: false, message: 'HTTP method not supported on /movies. Use /movies/:title to update.' });
+        res.status(405).json({ success: false, message: 'HTTP method not supported on /movies.' });
     })
     .delete(authJwtController.isAuthenticated, (req, res) => {
-        res.status(405).json({ success: false, message: 'HTTP method not supported on /movies. Use /movies/:title to delete.' });
+        res.status(405).json({ success: false, message: 'HTTP method not supported on /movies.' });
     });
 
-// /movies/:movieparameter routes
+// GET /movies/:movieparameter - returns specific movie, with reviews+avgRating if ?reviews=true
 router.route('/movies/:movieparameter')
     .get(authJwtController.isAuthenticated, async (req, res) => {
         try {
@@ -183,6 +212,11 @@ router.route('/movies/:movieparameter')
                             localField: '_id',
                             foreignField: 'movieId',
                             as: 'reviews'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            avgRating: { $avg: '$reviews.rating' }
                         }
                     }
                 ]);
@@ -231,7 +265,8 @@ router.route('/movies/:movieparameter')
         }
     });
 
-// /reviews routes
+// GET /reviews - returns all reviews
+// POST /reviews - creates a review, username pulled from JWT token
 router.route('/reviews')
     .get(authJwtController.isAuthenticated, async (req, res) => {
         try {
@@ -242,21 +277,58 @@ router.route('/reviews')
         }
     })
     .post(authJwtController.isAuthenticated, async (req, res) => {
-        const { movieId, username, review, rating } = req.body;
+        const { movieId, review, rating } = req.body;
+        const username = req.user.username; // pulled from JWT token
 
-        if (!movieId || !username || !review || rating === undefined) {
-            return res.status(400).json({ success: false, message: 'Review must include movieId, username, review, and rating.' });
+        if (!movieId || !review || rating === undefined) {
+            return res.status(400).json({ success: false, message: 'Review must include movieId, review, and rating.' });
         }
-
         try {
             const movie = await Movie.findById(movieId);
             if (!movie) {
                 return res.status(404).json({ success: false, message: 'Movie not found.' });
             }
-
             const newReview = new Review({ movieId, username, review, rating });
             await newReview.save();
             res.status(201).json({ message: 'Review created!' });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    });
+
+// POST /search - search movies by partial title or actor name (extra credit)
+router.route('/search')
+    .post(authJwtController.isAuthenticated, async (req, res) => {
+        const { query } = req.body;
+        if (!query) {
+            return res.status(400).json({ success: false, message: 'Search query is required.' });
+        }
+        try {
+            const movies = await Movie.aggregate([
+                {
+                    $match: {
+                        $or: [
+                            { title: { $regex: query, $options: 'i' } },
+                            { 'actors.actorName': { $regex: query, $options: 'i' } }
+                        ]
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'reviews',
+                        localField: '_id',
+                        foreignField: 'movieId',
+                        as: 'movieReviews'
+                    }
+                },
+                {
+                    $addFields: {
+                        avgRating: { $avg: '$movieReviews.rating' }
+                    }
+                },
+                { $sort: { avgRating: -1 } }
+            ]);
+            res.status(200).json(movies);
         } catch (err) {
             res.status(500).json({ success: false, message: err.message });
         }
